@@ -1,0 +1,24 @@
+
+spring:
+  datasource:
+    name: test  #数据库名
+    url: jdbc:mysql://localhost:3306/questionnaires #url
+    username: root  #用户名
+    password: 1078683870  #密码
+    driver-class-name: com.mysql.cj.jdbc.Driver  #数据库链接驱动
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  jackson:
+    default-property-inclusion: non_null
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  thymeleaf:
+    prefix: classpath:/templates/
+    encoding: UTF-8
+    mode: HTML5
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml  #配置映射文件
+  type-aliases-package: com.example.demo.bean #配置实体类

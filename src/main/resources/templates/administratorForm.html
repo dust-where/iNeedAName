@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>调查问卷页面</title>
+    <style>
+        body{
+            background-color: gray;
+        }
+        .index{
+            margin: auto;
+            width:920px;
+            background-color: white;
+            box-shadow:10px 10px 15px black;
+            margin-top:10px;
+        }
+        h1{
+            color:orange;
+            padding-top:30px;
+            text-align:center;
+        }
+        form{
+            padding-left: 100px;
+            line-height:180%;
+        }
+        input{
+            border-color: black;
+            border-top-width:0px;
+            border-right-width:0px;
+            border-bottom-width:2px;
+            border-left-width:0px;
+        }
+        #btn{
+            background-color: #FFA500;
+            color:white;
+            padding:5px 10px;
+            margin-left:420px;
+            margin-top:16px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquerysession.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            window.onload = function () {
+                document.getElementById('qName').innerText = sessionStorage.getItem('qName');
+                $.ajax({
+                    url:'/doSingle',
+                    type:'get',
+                    data:{
+                        'qid':$.session.get('qId'),
+                    },
+                    dataType:'json',
+                    async: false,
+                    success:function (data) {
+                        // alert("true");
+                        var htmlStr = "";
+                        for (var i = 0; i < data.length; i++) {
+                            // <li>您的教育程度是？</li>
+                            // <label><input type="radio" name="education" value="1" required />&nbsp;&nbsp;高中&nbsp;&nbsp; </label>
+                            // <label><input type="radio" name="education" value="2" />&nbsp;&nbsp;大专&nbsp;&nbsp; </label>
+                            // <label><input type="radio" name="education" value="3" />&nbsp;&nbsp;本科&nbsp;&nbsp; </label>
+                            // <label><input type="radio" name="education" value="4" />&nbsp;&nbsp;硕士研究生&nbsp;&nbsp; </label>
+                            // <label><input type="radio" name="education" value="5" />&nbsp;&nbsp;博士及以上 </label>
+                            var data1 = data[i];
+                            htmlStr += "<li>" + data1.sName + "？</li>";
+                            for (var j = 0; j < data1.singleTwoBeans.length; j++) {
+                                var data2 = data1.singleTwoBeans[j];
+                                htmlStr += "<label><input max='single' type=\"radio\" name=\"" + data1.sName + "\" value=\"" + data2.st + "\" required />&nbsp;&nbsp;" + data2.sIssue + "&nbsp;&nbsp; </label>";
+                            }
+                        }
+                        document.getElementById("single").innerHTML = htmlStr;
+                    },
+                    error:function () {
+                        alert("请求失败，请稍后再试。")
+                    }
+                })
+                $.ajax({
+                    url:'/doMultiple',
+                    type: 'get',
+                    data:{
+                        'qid':$.session.get('qId'),
+                    },
+                    dataType: 'json',
+                    async: false,
+                    success:function (data) {
+                        // alert("true")
+                        var htmlStr = "";
+                        for (var i = 0 ; i < data.length; i++) {
+                            // <li>您看中以下哪些支付功能？（可多选）</li>
+                            // <label><input type="checkbox" name="how" value="1" />&nbsp;&nbsp;话费/游戏币充值</label><br />
+                            // <label><input type="checkbox" name="how" value="2" />&nbsp;&nbsp;刷手机加油</label><br />
+                            // <label><input type="checkbox" name="how" value="3" />&nbsp;&nbsp;刷手机购物</label><br />
+                            // <label><input type="checkbox" name="how" value="4" />&nbsp;&nbsp;刷手机乘坐公交/轻轨/地铁</label><br />
+                            // <label><input type="checkbox" name="how" value="5" />&nbsp;&nbsp;水电煤/有线电视/宽带远程缴费</label><br />
+                            // <label><input type="checkbox" name="how" value="6" />&nbsp;&nbsp;享受联盟商户的优惠折扣</label><br />
+                            // <label><input type="checkbox" name="how" value="7" />&nbsp;&nbsp;以上均不感兴趣</label><br />
+                            var data1 = data[i];
+                            htmlStr += "<li>" + data1.mName + "（可多选）</li>";
+                            for (var j = 0; j < data1.multipleTwoBeans.length; j++) {
+                                var data2 = data1.multipleTwoBeans[j];
+                                htmlStr += "<label><input max='multiple' type=\"checkbox\" name=\"" + data1.mName + "\" value=\"" + data2.mt + "\" />&nbsp;&nbsp;" + data2.mIssue + "</label><br />";
+                            }
+                        }
+                        document.getElementById("multiple").innerHTML = htmlStr;
+                    },
+                    error:function () {
+                        alert("请求失败，请稍后再试。")
+                    }
+                })
+            }
+        })
+        var flags = true;
+        function addMultiple(mt) {
+            $.ajax({
+                url:'doAddMultiple',
+                type: 'post',
+                dataType: 'string',
+                async: false,
+                data: {
+                    'mt': mt,
+                },
+                success:function (data){
+                },
+                error:function () {
+                }
+            })
+        }
+        function addSingle(st) {
+            $.ajax({
+                url:'doAddSingle',
+                type: 'post',
+                dataType: 'string',
+                async: false,
+                data: {
+                    'st': st,
+                },
+                success:function (data){
+                },
+                error:function () {
+                }
+            })
+        }
+        function scan() {
+            var inputs = document.getElementsByTagName("input");
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].checked) {
+                    var test = inputs[i].max;
+                    var obj = inputs[i].value;
+                    // alert(obj);
+                    if (test == "single") {
+                        addSingle(obj);
+                    } else {
+                        addMultiple(obj);
+                    }
+                }
+            }
+            alert("感谢提交");
+            f();
+        }
+        function f() {
+            window.location.href = "/user";
+        }
+    </script>
+</head>
+<body background="img/img.png">
+<div class="index">
+    <h1 id="qName">这里是问卷名</h1>
+    <hr color="orange" width="700px" />
+    <form>
+        <ol id="single">
+        </ol>
+        <ol id="multiple">
+        </ol>
+        <br />
+    </form>
+    <button id="btn" onclick="scan()">提交问卷</button>
+</div>
+</body>
+</html>

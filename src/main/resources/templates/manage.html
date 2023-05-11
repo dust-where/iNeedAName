@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>管理平台</title>
+  <style>
+    body{
+      background-color: gray;
+    }
+    .index{
+      margin: auto;
+      width:920px;
+      background-color: white;
+      box-shadow:10px 10px 15px black;
+      margin-top:10px;
+    }
+    h1{
+      color:orange;
+      padding-top:30px;
+      text-align:center;
+    }
+    button{
+      line-height:180%;
+    }
+    input{
+      border-color: black;
+      border-top-width:0px;
+      border-right-width:0px;
+      border-bottom-width:2px;
+      border-left-width:0px;
+    }
+    table{
+      border-collapse: collapse;/*让靠在一起的单元格只显示一个边框，边框不进行叠加*/
+    }
+    table tr th{
+      border: solid 1px #ccc;
+      height: 30px;
+      width: 300px;
+      background-color: #eee;
+    }
+    table tr td{
+      border: solid 1px #ccc;
+      height: 30px;
+      text-align: center;
+    }
+    table tr:hover{
+      background-color: #f0edf3;
+    }
+    #btn{
+      background-color: #FFA500;
+      color:white;
+      padding:5px 10px;
+      margin-left:425px;
+      margin-top:16px;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-top: 30px;
+      margin-left: 250px;
+      color: azure;
+    }
+    .black_overlay1 {
+      display: none;
+      /* 此元素不会被显示*/
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: #bbbbbb;
+      z-index: 1001;
+      /* z-index 属性设置元素的堆叠顺序。*/
+      opacity: .80;
+      /* opacity 属性设置元素的不透明级别。*/
+    }
+    .white_content1 {
+      display: none;
+      position: absolute;
+      top: 20%;
+      border: 1px solid #bbbbbb;
+      border-radius: 20px;
+      background-color: rgba(75, 81, 95, 0.3);
+      z-index: 1002;
+      /*层级要比.black_overlay高，这样才能显示在它前面*/
+      overflow: auto;
+    }
+    .black_overlay2 {
+      display: none;
+      /* 此元素不会被显示*/
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: #bbbbbb;
+      z-index: 1003;
+      /* z-index 属性设置元素的堆叠顺序。*/
+      opacity: .80;
+      /* opacity 属性设置元素的不透明级别。*/
+    }
+    .white_content2 {
+      display: none;
+      position: absolute;
+      top: 20%;
+      border: 1px solid #bbbbbb;
+      border-radius: 20px;
+      background-color: rgba(75, 81, 95, 0.3);
+      z-index: 1004;
+      /*层级要比.black_overlay高，这样才能显示在它前面*/
+      overflow: auto;
+    }
+    .black_overlay3 {
+      display: none;
+      /* 此元素不会被显示*/
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: #bbbbbb;
+      z-index: 1005;
+      /* z-index 属性设置元素的堆叠顺序。*/
+      opacity: .80;
+      /* opacity 属性设置元素的不透明级别。*/
+    }
+    .white_content3 {
+      display: none;
+      position: absolute;
+      top: 20%;
+      border: 1px solid #bbbbbb;
+      border-radius: 20px;
+      background-color: rgba(75, 81, 95, 0.3);
+      z-index: 1006;
+      /*层级要比.black_overlay高，这样才能显示在它前面*/
+      overflow: auto;
+    }
+    .black_overlay4 {
+      display: none;
+      /* 此元素不会被显示*/
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: #bbbbbb;
+      z-index: 1001;
+      /* z-index 属性设置元素的堆叠顺序。*/
+      opacity: .80;
+      /* opacity 属性设置元素的不透明级别。*/
+    }
+    .white_content4 {
+      display: none;
+      position: absolute;
+      top: 20%;
+      border: 1px solid #bbbbbb;
+      border-radius: 20px;
+      background-color: rgba(75, 81, 95, 0.3);
+      z-index: 1002;
+      /*层级要比.black_overlay高，这样才能显示在它前面*/
+      overflow: auto;
+    }
+    #light1 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    #light2 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 600px;
+      height: 400px;
+      margin-left: -300px;
+      margin-top: -300px;
+    }
+    #light3 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 600px;
+      height: 400px;
+      margin-left: -300px;
+      margin-top: -300px;
+    }
+    #light4 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    .inp {
+      margin-left: 15px;
+      border-radius: 5px;
+      border-style: hidden;
+      height: 30px;
+      width: 140px;
+      background-color: rgba(216, 191, 216, 0.5);
+      outline: none;
+      color: #f0edf3;
+      padding-left: 10px;
+    }
+    .button_beautiful {
+      width: 150px;
+      height: 34px;
+      /* 高度 */
+      border-width: 0px;
+      border-radius: 6px;
+      background: #4ECDC4;
+      cursor: pointer;
+      outline: none;
+      color: white;
+      font-size: 16px;
+      margin-top: 40px;
+      margin-left: 150px;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquerysession.js"></script>
+  <script type="application/javascript">
+    function onloads () {
+      $.ajax({
+        url:'/onload',
+        type:'get',
+        data:{
+          'aid':$.session.get('aid'),
+        },
+        dataType:'json',
+        async: false,
+        success:function (datas) {
+          // alert(data[0].qId);
+          var htmlStr = "<tr><th style='width: 450px'>问卷名</th><th>截止时间</th><th>删除问卷</th><th>查看数据</th><th>编辑调查问卷</th><th>分享链接</th></tr>";
+          for (var i = 0; i < datas.length; i++) {
+            var data = datas[i];
+            // <tr><td>周杰伦音乐受众调查问卷</td><td>2023-3-28</td><td><button>删除</button></td><td><button>可视化</button></td></tr>
+            htmlStr += "<tr><td style='width: '>" + data.qName + "</td><td>" + data.qLastTime + "</td><td><button value='" + data.qId + "' onclick='deleteQuestion(" + data.qId + ")'>删除</button></td><td><button onclick='f2(" + data.qId + ")'>查看</button></td><td><button onclick='toLook(" + data.qId + ",\"" + data.qName + "\")'>编辑</button></td><td>" + data.qId + "</td></tr>";
+          }
+          document.getElementById("tBody").innerHTML = htmlStr;
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        },
+      })
+    }
+    function toLook(qid, qname) {
+      $.session.set('qName', qname);
+      $.session.set('qid', qid);
+      window.location.href = "/look";
+    }
+    $(function () {
+      window.onload = onloads();
+    })
+    function f2(qid) {
+      $.session.set("qid", qid);
+      window.location.href = "/echarts";
+    }
+    function deleteQuestion(qid) {
+      $.ajax({
+        url: '/deleteQuestionnaire',
+        type: 'post',
+        data: {
+          'qid': qid,
+        },
+        dataType: 'text',
+        async: true,
+        success:function (data) {
+          if (data == "true") {
+            alert("删除成功");
+          } else {
+            alert("删除失败");
+          }
+          onloads();
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        },
+      })
+    }
+    function display(id){
+      var traget=document.getElementById(id);
+      if(traget.style.display=="none"){
+        traget.style.display="";
+      }else{
+        traget.style.display="none";
+      }
+    }
+    function onclick1() {
+      // 显示函数1
+      document.getElementById('light4').style.display='block';
+      document.getElementById('fade4').style.display='block';
+    }
+    function onclick2() {
+      // 隐藏函数
+      document.getElementById('light1').style.display='none';
+      document.getElementById('fade1').style.display='none';
+    }
+    function onclick3() {
+      document.getElementById('light2').style.display='block';
+      document.getElementById('fade2').style.display='block';
+    }
+    function onclick4() {
+      document.getElementById('light2').style.display='none';
+      document.getElementById('fade2').style.display='none';
+    }
+    function onclick5() {
+      document.getElementById('light3').style.display='block';
+      document.getElementById('fade3').style.display='block';
+    }
+    function onclick6() {
+      document.getElementById('light3').style.display='none';
+      document.getElementById('fade3').style.display='none';
+    }
+    function onclick7() {
+      $.ajax({
+        url: '/insertQuestionnaire',
+        type: 'post',
+        data: {
+          'aid': $.session.get('aid'),
+          'qlasttime': $("#qlasttime").val(),
+          'qname': $("#qname").val(),
+        },
+        dataType: 'text',
+        async: false,
+        success:function (data) {
+          if (data == "true") {
+            alert("创建成功");
+            onclick8();
+            onloads();
+            // document.getElementById('light1').style.display='block';
+            // document.getElementById('fade1').style.display='block';
+          } else {
+            alert("创建失败");
+          }
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        },
+      })
+    }
+    function onclick8() {
+      document.getElementById('light4').style.display='none';
+      document.getElementById('fade4').style.display='none';
+    }
+    
+    function f() {
+      
+    }
+  </script>
+</head>
+<body background="img/img.png">
+<div class="index">
+  <h1>调查问卷管理平台</h1>
+  <hr color="orange" width="700px" />
+  <table border="0" cellspacing="0" cellpadding="0" id="tBody">
+    <tr><th>问卷名</th><th>截止时间</th><th>删除问卷</th><th>数据可视化</th></tr>
+  </table>
+  <button id="btn" onclick="onclick1()">新增问卷</button>
+</div>
+
+<!--创建问卷 跳转到light1-->
+<div id="light4" class="white_content4">
+  <p>问卷截止时间:<input class="inp" id="qlasttime" type="date"></p>
+  <p>问&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卷&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:<input class="inp" id="qname" type="text"></p>
+  <input type="button" value="创建问卷" class="button_beautiful" onclick="onclick7()" />
+  <input type="button" value="取消" class="button_beautiful" onclick="onclick8()" />
+</div>
+<div id="fade4" class="black_overlay4"></div>
+
+<!--<div id="light1" class="white_content1">-->
+<!--&lt;!&ndash;  &ndash;&gt;-->
+
+<!--  <input type="button" value="创建单选问题" class="button_beautiful" onclick="onclick3()">-->
+<!--  <input type="button" value="创建多选问题" class="button_beautiful" onclick="onclick5()">-->
+<!--  <input type="button" value="确认" class="button_beautiful" onclick="onclick2()" />-->
+<!--</div>-->
+<!--<div id="fade1" class="black_overlay1"></div>-->
+
+<!--<div id="light2" class="white_content2">-->
+<!--  <input type="button" value="取消single" class="button_beautiful" onclick="onclick4()">-->
+<!--</div>-->
+<!--<div id="fade2" class="black_overlay2"></div>-->
+
+<!--<div id="light3" class="white_content3">-->
+<!--  <input type="button" value="取消multiple" class="button_beautiful" onclick="onclick6()">-->
+<!--</div>-->
+<!--<div id="fade3" class="black_overlay3"></div>-->
+</body>
+</html>

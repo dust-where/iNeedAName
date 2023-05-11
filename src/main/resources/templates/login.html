@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    #loginDiv {
+      width: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+      background-color: rgba(75, 81, 95, 0.3);
+      box-shadow: 7px 7px 17px rgba(52, 56, 66, 0.5);
+      border-radius: 250px;
+    }
+    p {
+      margin-top: 30px;
+      margin-left: 10px;
+      color: azure;
+    }
+    input {
+      margin-left: 15px;
+      border-radius: 5px;
+      border-style: hidden;
+      height: 30px;
+      width: 140px;
+      background-color: rgba(216, 191, 216, 0.5);
+      outline: none;
+      color: #f0edf3;
+      padding-left: 10px;
+    }
+    .button {
+      border-color: cornsilk;
+      background-color: rgba(100, 149, 237, .7);
+      color: aliceblue;
+      border-style: hidden;
+      border-radius: 5px;
+      width: 100px;
+      height: 31px;
+      font-size: 16px;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquerysession.js"></script>
+  <script type="application/javascript">
+    $(function () {
+      var btn = $("#input");
+      // 点击事件
+      btn.click(function () {
+        var key = $.session.get('key');
+        var code = $("#code").val();
+        // alert(code);
+        // alert(code);
+        if (key === null) {
+          alert("请获取验证码。");
+        } else if (key == code) {
+          $.ajax({
+            url:'/login',
+            type:'post',
+            data:{
+              'name':$("#email").val(),
+              'password':$("#password").val(),
+            },
+            dataType:"json",
+            async: false,
+            success:function (data) {
+              if (data.aid == null) {
+                alert("登录失败，请输入正确账户密码。");
+              } else {
+                // alert("进行跳转");
+                sessionStorage.setItem('aid', data.aid);
+                window.location.href = "/manage";
+              }
+            },
+            error:function () {
+              alert("请求失败，请稍后再试。")
+            },
+          })
+        } else {
+          alert("请输入正确的验证码。")
+        }
+      })
+      var btn2 = $("#getCode");
+      btn2.click(function () {
+        $.ajax({
+          url:'/getCode',
+          type: 'get',
+          dataType: "text",
+          async: false,
+          success:function (data) {
+            console.log(data);
+            alert("验证码：" + data);
+            // $.session.set('key', data);
+            // var key = $.session.get('key');
+            // alert(key);
+            sessionStorage.setItem("key", data);
+            // var key = sessionStorage.getItem('key');
+            // alert(key);
+          },
+          error:function () {
+            alert("请求失败")
+          },
+        })
+      })
+    })
+
+  </script>
+</head>
+<body background="img/img.png">
+<div id="loginDiv">
+  <form id="form">
+    <h1 style="text-align: center;color: aliceblue;">管理员登录</h1>
+    <p>账&nbsp;&nbsp;&nbsp;&nbsp;户:<input id="email" type="text"></p>
+    <p>密&nbsp;&nbsp;&nbsp;&nbsp;码:<input id="password" type="password"></p>
+    <p>验证码:<input id="code" type="text"/></p>
+    <div style="text-align: center;margin-top: 30px;">
+      <input type="button" class="button" value="登录" id="input"/>
+      <input type="button" class="button" value="获取验证码" id="getCode"/>
+    </div>
+  </form>
+</div>
+</body>
+</html>

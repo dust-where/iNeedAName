@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>查看问卷数据</title>
+  <style>
+    body{
+      background-color: gray;
+    }
+    .index{
+      height: 900px;
+      overflow: auto;
+      margin: auto;
+      width:920px;
+      background-color: white;
+      box-shadow:10px 10px 15px black;
+      margin-top:10px;
+    }
+    h1{
+      color:orange;
+      padding-top:30px;
+      text-align:center;
+    }
+    form{
+      padding-left: 100px;
+      line-height:180%;
+    }
+    input{
+      border-color: black;
+      border-top-width:0px;
+      border-right-width:0px;
+      border-bottom-width:2px;
+      border-left-width:0px;
+    }
+    p {
+      margin-top: 30px;
+      margin-left: 250px;
+      color: azure;
+    }
+    #btn{
+      background-color: #FFA500;
+      color:white;
+      padding:5px 10px;
+      margin-left:390px;
+      margin-top:16px;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #FFA500;
+      color:white;
+      padding:5px 10px;
+      margin-top:16px;
+      margin-bottom: 20px;
+    }
+    .button_beautiful {
+      width: 150px;
+      height: 34px;
+      /* 高度 */
+      border-width: 0px;
+      border-radius: 6px;
+      background: #4ECDC4;
+      cursor: pointer;
+      outline: none;
+      color: white;
+      font-size: 16px;
+      margin-top: 40px;
+      margin-left: 320px;
+    }
+    #light1 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    #light2 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    #light3 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    #light4 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 800px;
+      height: 400px;
+      margin-left: -400px;
+      margin-top: -350px;
+    }
+    .black_overlay1 {
+      display: none;
+      /* 此元素不会被显示*/
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: #bbbbbb;
+      z-index: 1001;
+      /* z-index 属性设置元素的堆叠顺序。*/
+      opacity: .80;
+      /* opacity 属性设置元素的不透明级别。*/
+    }
+    .white_content1 {
+      display: none;
+      position: absolute;
+      top: 20%;
+      border: 1px solid #bbbbbb;
+      border-radius: 20px;
+      background-color: rgba(75, 81, 95, 0.3);
+      z-index: 1002;
+      /*层级要比.black_overlay高，这样才能显示在它前面*/
+      overflow: auto;
+    }
+    .inp {
+      margin-left: 15px;
+      border-radius: 5px;
+      border-style: hidden;
+      height: 30px;
+      width: 140px;
+      background-color: rgba(216, 191, 216, 0.5);
+      outline: none;
+      color: #f0edf3;
+      padding-left: 10px;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquerysession.js"></script>
+  <script type="application/javascript">
+    $(function () {
+      window.onload = flash();
+    })
+    function flash() {
+      document.getElementById('qName').innerText = $.session.get('qName');
+      $.ajax({
+        url:'/doSingles',
+        type:'get',
+        data:{
+          'qid':$.session.get('qid'),
+        },
+        dataType:'json',
+        async: false,
+        success:function (data) {
+          // alert("true");
+          var htmlStr = "<button style='margin-left: 350px' onclick='onclick1()'>增加单选问题</button>";
+          for (var i = 0; i < data.length; i++) {
+            // <li>您的教育程度是？</li>
+            // <label><input type="radio" name="education" value="1" required />&nbsp;&nbsp;高中&nbsp;&nbsp; </label>
+            // <label><input type="radio" name="education" value="2" />&nbsp;&nbsp;大专&nbsp;&nbsp; </label>
+            // <label><input type="radio" name="education" value="3" />&nbsp;&nbsp;本科&nbsp;&nbsp; </label>
+            // <label><input type="radio" name="education" value="4" />&nbsp;&nbsp;硕士研究生&nbsp;&nbsp; </label>
+            // <label><input type="radio" name="education" value="5" />&nbsp;&nbsp;博士及以上 </label>
+            var data1 = data[i];
+            htmlStr += "<li>" + data1.sName + "？</li><button onclick='onclick5(" + data1.sId + ")'>增加选项</button>";
+            for (var j = 0; j < data1.singleTwoBeans.length; j++) {
+              var data2 = data1.singleTwoBeans[j];
+              htmlStr += "<label><input max='single' type=\"radio\" name=\"" + data1.sName + "\" value=\"" + data2.st + "\" required />&nbsp;&nbsp;" + data2.sIssue + "</label>";
+            }
+          }
+          document.getElementById("single").innerHTML = htmlStr;
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        }
+      })
+      $.ajax({
+        url:'/doMultiples',
+        type: 'get',
+        data:{
+          'qid':$.session.get('qid'),
+        },
+        dataType: 'json',
+        async: false,
+        success:function (data) {
+          // alert("true")
+          var htmlStr = "<button style='margin-left: 350px' onclick='onclick2()'>增加多选问题</button>";
+          for (var i = 0 ; i < data.length; i++) {
+            // <li>您看中以下哪些支付功能？（可多选）</li>
+            // <label><input type="checkbox" name="how" value="1" />&nbsp;&nbsp;话费/游戏币充值</label><br />
+            // <label><input type="checkbox" name="how" value="2" />&nbsp;&nbsp;刷手机加油</label><br />
+            // <label><input type="checkbox" name="how" value="3" />&nbsp;&nbsp;刷手机购物</label><br />
+            // <label><input type="checkbox" name="how" value="4" />&nbsp;&nbsp;刷手机乘坐公交/轻轨/地铁</label><br />
+            // <label><input type="checkbox" name="how" value="5" />&nbsp;&nbsp;水电煤/有线电视/宽带远程缴费</label><br />
+            // <label><input type="checkbox" name="how" value="6" />&nbsp;&nbsp;享受联盟商户的优惠折扣</label><br />
+            // <label><input type="checkbox" name="how" value="7" />&nbsp;&nbsp;以上均不感兴趣</label><br />
+            var data1 = data[i];
+            htmlStr += "<li>" + data1.mName + "？（可多选）</li><button style='display: block' onclick='onclick6("+ data1.mId +")'>增加选项</button>";
+            for (var j = 0; j < data1.multipleTwoBeans.length; j++) {
+              var data2 = data1.multipleTwoBeans[j];
+              htmlStr += "<label><input max='multiple' type=\"checkbox\" name=\"" + data1.mName + "\" value=\"" + data2.mt + "\" />&nbsp;&nbsp;" + data2.mIssue + "</label><br />";
+            }
+          }
+          document.getElementById("multiple").innerHTML = htmlStr;
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        }
+      })
+    };
+    function back() {
+      window.location.href = "/manage";
+    }
+    function onclick1() {
+      document.getElementById('light1').style.display='block';
+      document.getElementById('fade1').style.display ='block';
+    }
+    function onclick3() {
+      if ($("#sname").val().length > 0) {
+        $.ajax({
+          url:'/insertSingleOne',
+          type: 'post',
+          data:{
+            'qid': $.session.get("qid"),
+            'sname': $("#sname").val(),
+          },
+          dataType: 'text',
+          async: false,
+          success:function (data) {
+            if (data == 'true') {
+              alert("创建成功");
+              document.getElementById('light1').style.display='none';
+              document.getElementById('fade1').style.display ='none';
+              flash();
+              document.getElementById("sname").value = "";
+            } else {
+              alert("创建失败");
+            }
+          },
+          error:function () {
+            alert("请求失败，请稍后再试。");
+          }
+        })
+      } else {
+        alert("输入框不能为空");
+      }
+    }
+    function onclick2() {
+      document.getElementById('light2').style.display='block';
+      document.getElementById('fade2').style.display = 'block';
+    }
+    function onclick4() {
+      if ($("#mname").val().length > 0) {
+        $.ajax({
+          url: '/insertMultipleOne',
+          type: 'post',
+          data: {
+            'qid': $.session.get("qid"),
+            'mname': $("#mname").val(),
+          },
+          dataType: 'text',
+          async: false,
+          success:function (data) {
+            if (data == 'true') {
+              alert("创建成功");
+              document.getElementById('light2').style.display='none';
+              document.getElementById('fade2').style.display ='none';
+              flash();
+              document.getElementById("mname").value = "";
+            } else {
+              alert("创建失败");
+            }
+          },
+          error:function () {
+            alert("请求失败，请稍后再试。");
+          }
+        })
+      } else {
+        alert("输入框不能为空");
+      }
+    }
+
+    function onclick5(sid) {
+      $.session.set("sid", sid);
+      document.getElementById('light3').style.display='block';
+      document.getElementById('fade3').style.display ='block';
+    }
+    function onclick6(mid) {
+      $.session.set("mid", mid);
+      document.getElementById('light4').style.display='block';
+      document.getElementById('fade4').style.display ='block';
+    }
+    function onclick7() {
+      if ($("#Sissue").val().length > 0) {
+        $.ajax({
+          url:'/insertSingleTwo',
+          type: 'post',
+          data: {
+            'sid': $.session.get("sid"),
+            'sname': $("#Sissue").val(),
+          },
+          dataType: "text",
+          async: false,
+          success: function (data) {
+            if (data == 'true') {
+              alert("创建成功");
+              document.getElementById('light3').style.display='none';
+              document.getElementById('fade3').style.display ='none';
+              flash();
+              document.getElementById("Sissue").value = "";
+            } else {
+              alert("创建失败");
+            }
+          },
+          error:function () {
+            alert("请求失败，请稍后再试。");
+          }
+        })
+      } else {
+        alert("输入框不能为空");
+      }
+    }
+    function onclick8() {
+      if ($("#Missue").val().length > 0) {
+        $.ajax({
+          url:'/insertMultipleTwo',
+          type: 'post',
+          data: {
+            'mid': $.session.get("mid"),
+            'mname': $("#Missue").val(),
+          },
+          dataType: "text",
+          async: false,
+          success: function (data) {
+            if (data == 'true') {
+              alert("创建成功");
+              document.getElementById('light4').style.display='none';
+              document.getElementById('fade4').style.display ='none';
+              flash();
+              document.getElementById("Missue").value = "";
+            } else {
+              alert("创建失败");
+            }
+          },
+          error:function () {
+            alert("请求失败，请稍后再试。");
+          }
+        })
+      } else {
+        alert("输入框不能为空");
+      }
+    }
+  </script>
+</head>
+<body background="img/img.png">
+<div class="index">
+  <h1 id="qName">管理平台</h1>
+  <hr color="orange" width="700px" />
+  <ol id="single">
+  </ol>
+  <ol id="multiple">
+  </ol>
+  <button id="btn" onclick="back()">返回管理界面</button>
+</div>
+
+<div id="light1" class="white_content1">
+  <p>单选问题名：<input class="inp" id="sname" type="text"></p>
+  <input type="button" value="确认" class="button_beautiful" onclick="onclick3()" />
+</div>
+<div id="fade1" class="black_overlay1"></div>
+
+<div id="light2" class="white_content1">
+  <p>多选问题名：<input class="inp" id="mname" type="text"></p>
+  <input type="button" value="确认" class="button_beautiful" onclick="onclick4()" />
+</div>
+<div id="fade2" class="black_overlay1"></div>
+
+<div id="light3" class="white_content1">
+  <p>单选选项名：<input class="inp" id="Sissue" type="text"></p>
+  <input type="button" value="确认" class="button_beautiful" onclick="onclick7()" />
+</div>
+<div id="fade3" class="black_overlay1"></div>
+
+<div id="light4" class="white_content1">
+  <p>多选选项名：<input class="inp" id="Missue" type="text"></p>
+  <input type="button" value="确认" class="button_beautiful" onclick="onclick8()" />
+</div>
+<div id="fade4" class="black_overlay1"></div>
+</body>
+</html>

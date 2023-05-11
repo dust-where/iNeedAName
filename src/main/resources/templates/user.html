@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用者界面</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        #loginDiv {
+            width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            background-color: rgba(75, 81, 95, 0.3);
+            box-shadow: 7px 7px 17px rgba(52, 56, 66, 0.5);
+            border-radius: 250px;
+        }
+        p {
+            margin-top: 30px;
+            margin-left: 10px;
+            color: azure;
+        }
+        input {
+            margin-left: 15px;
+            border-radius: 5px;
+            border-style: hidden;
+            height: 30px;
+            width: 140px;
+            background-color: rgba(216, 191, 216, 0.5);
+            outline: none;
+            color: #f0edf3;
+            padding-left: 10px;
+        }
+        .button {
+            border-color: cornsilk;
+            background-color: rgba(100, 149, 237, .7);
+            color: aliceblue;
+            border-style: hidden;
+            border-radius: 5px;
+            width: 100px;
+            height: 31px;
+            font-size: 16px;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquerysession.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            var btn = $("#input");
+            btn.click(function () {
+                $.ajax({
+                    url:'/do',
+                    type:'post',
+                    data:{
+                        'qid':$("#code").val(),
+                    },
+                    dataType:'json',
+                    async:false,
+                    success:function (data) {
+                        if (data == null) {
+                            alert("请输入正确的问卷链接");
+                        } else {
+                            // alert(data.qId);
+                            sessionStorage.setItem('qId', data.qId);
+                            sessionStorage.setItem('qName', data.qName);
+                            window.location.href = "/form";
+                        }
+                    },
+                    error:function () {
+                        alert("请求失败，请稍后再试。")
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body background="img/img.png">
+<div id="loginDiv">
+    <form id="form">
+        <h1 style="text-align: center;color: aliceblue;">调查问卷进入界面</h1>
+        <p>问卷链接:<input id="code" type="text"></p>
+        <div style="text-align: center;margin-top: 30px;">
+            <input type="button" class="button" value="进入" id="input"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

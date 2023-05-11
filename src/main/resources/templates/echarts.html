@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    #btn{
+      background-color: #FFA500;
+      color:white;
+      padding:5px 10px;
+      margin: auto;
+      margin-top:16px;
+      margin-bottom: 20px;
+      float: none;
+      display: block;
+    }
+    table{
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table caption{
+      font-size: 2em;
+      font-weight: bold;
+      margin: 1em 0;
+    }
+    th,td{
+      border: 1px solid #999;
+      text-align: center;
+      padding: 20px 0;
+    }
+    th {
+      background-color: #eeeeee;
+    }
+    td {
+      background-color: #ffffff;
+    }
+    table thead tr{
+      background-color: #008c8c;
+      color: #fff;
+    }
+    table tbody tr:nth-child(odd){
+      background-color: #eee;
+    }
+    table tbody tr:hover{
+      background-color: #ccc;
+    }
+    table tfoot tr td{
+      text-align: right;
+      padding-right: 20px;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquerysession.js"></script>
+  <script type="text/javascript" src="js/echarts.js"></script>
+</head>
+<body background="img/img.png">
+<div id="list" style="width: 1400px; height: 700px; overflow-x: scroll;margin: 100px auto auto;">
+</div>
+
+<!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+<div><button id="btn" onclick="back()">返回管理界面</button></div>
+<script type="text/javascript">
+  function back() {
+    window.location.href = "/manage";
+  }
+  $(function () {
+    var list = document.getElementById('list');
+    var names = "";
+    window.onload = function () {
+      $.ajax({
+        url:'/doSingleEcharts',
+        type:'get',
+        data:{
+          'qid':$.session.get('qid'),
+        },
+        dataType:'json',
+        async: false,
+        success:function (data) {
+          for (var i = 0; i < data.length; i++) {
+            var data1 =data[i];
+            names += "<table><caption>" + data1.sName + "</caption><tr>";
+            for (var j = 0; j < data1.singleTwoBeans.length; j++) {
+              var data2 = data1.singleTwoBeans[j];
+              names += "<th>" + data2.sIssue + "</th>"
+            }
+            names += "</tr><tr>"
+            for (var j = 0; j < data1.singleTwoBeans.length; j++) {
+              var data2 = data1.singleTwoBeans[j];
+              names += "<td>" + data2.sSum + "</td>"
+            }
+            names += "</tr></table>"
+          }
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        }
+      })
+      $.ajax({
+        url:'/doMultipleEcharts',
+        type: 'get',
+        data:{
+          'qid':$.session.get('qid'),
+        },
+        dataType: 'json',
+        async: false,
+        success:function (data) {
+          for (var i = 0; i < data.length; i++) {
+            var data1 =data[i];
+            names += "<table><caption>" + data1.mName + "</caption><tr>";
+            for (var j = 0; j < data1.multipleTwoBeans.length; j++) {
+              var data2 = data1.multipleTwoBeans[j];
+              names += "<th>" + data2.mIssue + "</th>"
+            }
+            names += "</tr><tr>"
+            for (var j = 0; j < data1.multipleTwoBeans.length; j++) {
+              var data2 = data1.multipleTwoBeans[j];
+              names += "<td>" + data2.mSum + "</td>"
+            }
+            names += "</tr></table>"
+          }
+          list.innerHTML = names;
+        },
+        error:function () {
+          alert("请求失败，请稍后再试。")
+        }
+      })
+    }
+  })
+  // // 基于准备好的dom，初始化echarts实例
+  // var myChart = echarts.init(document.getElementById('main'));
+  // // 指定图表的配置项和数据
+  // option = {
+  //   tooltip: {
+  //     trigger: 'axis',
+  //     axisPointer: {
+  //       type: 'shadow'
+  //     }
+  //   },
+  //   grid: {
+  //     left: '3%',
+  //     right: '4%',
+  //     bottom: '3%',
+  //     containLabel: true
+  //   },
+  //   xAxis: [
+  //     {
+  //       type: 'category',
+  //       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  //       axisTick: {
+  //         alignWithLabel: true
+  //       }
+  //     }
+  //   ],
+  //   yAxis: [
+  //     {
+  //       type: 'value'
+  //     }
+  //   ],
+  //   series: [
+  //     {
+  //       name: 'Direct',
+  //       type: 'bar',
+  //       barWidth: '60%',
+  //       data: [10, 52, 200, 334, 390, 330, 220]
+  //     }
+  //   ]
+  // };
+  //
+  // // 使用刚指定的配置项和数据显示图表。
+  // myChart.setOption(option);
+  // var my = echarts.init(document.getElementById('mi'));
+  // my.setOption(option);
+</script>
+</body>
+</html>
