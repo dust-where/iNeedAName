@@ -28,8 +28,8 @@ public class loginController {
     public String getCode(HttpServletRequest request) {
         String random = getRandomCode();
         System.out.println(random);
-        return "aaaaa";
-//        return random;
+//        return "aaaaa";
+        return random;
     }
 
     @PostMapping("/login")
